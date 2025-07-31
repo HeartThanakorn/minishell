@@ -12,8 +12,7 @@ PRINTF_SRCS = ft_printf/ft_printf.c \
 	      		ft_printf/ft_printf_utils.c \
 			ft_printf/ft_putptr.c
 
-GNL_SRCS = get_next_line/get_next_line.c \
-	   get_next_line/get_next_line_utils.c
+GNL_SRCS = get_next_line/get_next_line.c
 
 SRCS += $(PRINTF_SRCS) $(GNL_SRCS)
 	
