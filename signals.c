@@ -1,21 +1,17 @@
 #include "minishell.h"
 
-// Global variable for signal handling (as required by the subject)
 int g_signal = 0;
 
 void handle_sigint(int sig)
 {
     (void)sig;
     g_signal = SIGINT;
-    printf("\n");
-    // For now, just print a new prompt indicator
-    // In the full shell, this would trigger a new prompt
+    write(STDOUT_FILENO, "\n", 1);
 }
 
 void handle_sigquit(int sig)
 {
     (void)sig;
-    // Do nothing for ctrl-\ in interactive mode
 }
 
 void setup_signals(void)
