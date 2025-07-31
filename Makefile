@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -lreadline
 SRCS = main.c builtins.c signals.c redirections.c
 OBJS = $(SRCS:.c=.o)
 LIBS = -lreadline
