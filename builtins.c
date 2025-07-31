@@ -73,7 +73,6 @@ int ft_exit(char **args)
     (void)args;
     printf("exit\n");
     exit(0);
-    return (0);
 }
 
 int ft_env(void)
