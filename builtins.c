@@ -51,9 +51,11 @@ int ft_pwd(void)
 
 int ft_echo(char **args)
 {
-    int i = 1;
-    int newline = 1;
+    int i;
+    int newline;
 
+    i = 1;
+    newline = 1;
     if (args[1] && ft_strncmp(args[1], "-n", 2) == 0 && args[1][2] == '\0')
     {
         newline = 0;
@@ -81,8 +83,9 @@ int ft_exit(char **args)
 int ft_env(void)
 {
     extern char **environ;
-    int i = 0;
+    int i;
 
+    i = 0;
     while (environ[i])
     {
         printf("%s\n", environ[i]);
@@ -119,9 +122,10 @@ int ft_cd(char **args)
 
 int ft_export(char **args)
 {
-    int i = 1;
+    int i;
     char *equal_sign;
 
+    i = 1;
     if (!args[1])
     {
         // Print all environment variables in sorted order (basic implementation)
@@ -152,8 +156,9 @@ int ft_export(char **args)
 
 int ft_unset(char **args)
 {
-    int i = 1;
+    int i;
 
+    i = 1;
     if (!args[1])
         return (0);
 

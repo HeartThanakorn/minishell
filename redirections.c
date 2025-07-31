@@ -1,7 +1,5 @@
 #include "minishell.h"
 
-// Basic redirection functions for your shell
-
 int redirect_input(char *filename)
 {
     int fd;
