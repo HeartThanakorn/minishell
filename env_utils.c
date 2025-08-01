@@ -14,7 +14,7 @@
 
 t_list	*env_node(char *env_s)
 {
-	int	key_len;
+	int		key_len;
 	char	*equal;
 	t_env	*var;
 	t_list	*node;
@@ -34,7 +34,7 @@ t_list	*env_node(char *env_s)
 
 void	init_env(t_shell *shell, char **envp)
 {
-	int	i;
+	int		i;
 	t_list	*node;
 
 	i = 0;

@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #ifndef MINISHELL_ENV_H
-#define MINISHELL_ENV_H
+# define MINISHELL_ENV_H
 
 # include <stdlib.h>
 # include <readline/readline.h>
@@ -42,4 +42,3 @@ char	*get_env_value(t_env *env_list, const char *key);
 char	**parse_path(t_env *env_list);
 
 #endif
-

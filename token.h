@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TOKEN.H
-#define TOKEN.H
+#ifndef TOKEN_H
+# define TOKEN_H
 
 t_list	*tokenize(const char *input);
 void	free_tokens(t_list *token_list);
