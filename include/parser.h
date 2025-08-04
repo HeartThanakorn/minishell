@@ -10,13 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-typedef struct s_command
-{
-    char    *cmd;           // command name (e.g. "ls", "echo")
-    char    **args;         // NULL-terminated array of arguments (including cmd at args[0])
-    char    *input_file;    // filename for input redirection (<)
-    char    *output_file;   // filename for output redirection (>)
-    int     output_append;  // flag for append mode (>>) vs overwrite (>)
-    struct s_command *next; // pointer to next command in pipeline (for '|')
-}   t_command;
+#ifndef PARSER_H
+# define PARSER_H
 
+typedef struct s_cmd
+{
+	int		is_infile;
+	int		append;
+	int		here_doc;
+	char	*cmd;
+	char	**args;
+	char	*infile;
+	char	*outfile;
+	struct s_cmd *next;
+}   t_cmd;
+
+#endif

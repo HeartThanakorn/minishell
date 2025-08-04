@@ -15,13 +15,15 @@
 void	minishell_loop(void)
 {
 	char	*input;
+	t_list	*tokens;
+	t_cmd	*cmd_list;
 
 	while (1)
 	{
 		input = readline("minishell> ");
 		if (g_sinal == SIGINT)
 		{
-			g_sinal = 0;
+			g_signal = 0;
 			free(input);
 			continue ;
 		}
@@ -29,6 +31,11 @@ void	minishell_loop(void)
 			break ;
 		if (*input)
 			add_history(input);
+		tokens = tokenize(input);
+		cmd_list = parse(tokens);
+		exec_cmds(cmd_list);
+		free(cmd_list);
+		free_tokens(tokens);
 		free(input);
 	}
 }

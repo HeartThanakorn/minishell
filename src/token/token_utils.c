@@ -32,60 +32,58 @@ int	token_size(char *s, char quote)
 	return (size);
 }
 
-void	str_quote(t_list **tokens, char **temp)
+static char	*op_extract(char **temp)
 {
 	int		i;
-	int		size;
-	char	quote;
+	int		is_double;
 	char	*s;
 	char	*t;
 
 	i = 0;
-	t = *temp;
-	quote = *t++;
-	size = token_size(t, quote);
-	s = malloc(size + 1);
-	if (!s)
-		return ;
-	while (i < size)
-	{
-		s[i] = t[i];
-		i++;
-	}
-	s[size] = '\0';
-	add_token(tokens, s);
-	t += size;
-	if (*t == quote)
-		t++;
-	*temp = t;
-	return ;
-}
-
-void	str_op(t_list **tokens, char **temp)
-{
-	int		i;
-	int		x;
-	char	*s;
-	char	*t;
-
-	i = 0;
-	x = 0;
+	is_double = 0;
 	t = *temp;
 	if (*t == *(t + 1))
 	{
 		s = malloc(3);
-		x = 1;
+		is_double = 1;
 	}
 	else
 		s = malloc(2);
 	if (!s)
-		return ;
+		return (NULL);
 	s[i++] = *t++;
-	if (x)
+	if (is_double)
 		s[i++] = *t++;
 	s[i] = '\0';
-	add_token(tokens, s);
 	*temp = t;
+	return (s);
+}
+
+void	str_op(t_list **tokens, char **temp)
+{
+	t_token	*token;
+	char	*s;
+
+	s = op_extract(temp);
+	if (!s)
+		return ;
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (free(s), (void)0);
+	token->value = s;
+	if (ft_strncmp(s, ">>", 3) == 0)
+		token->type = REDIR_APPEND;
+	else if (ft_strncmp(s, "<<", 3) == 0)
+		token->type = REDIR_HERE_DOC;
+	else if (ft_strncmp(s, "<", 2) == 0)
+		token->type = REDIR_IN;
+	else if (ft_strncmp(s, ">", 2) == 0)
+		token->type = REDIR_OUT;
+	else if (ft_strncmp(s, "|", 2) == 0)
+		token->type = PIPE;
+	else
+		token->type = WORD;
+	add_token(tokens, token);
 }
 
 void	str_word(t_list **tokens, char **temp)
@@ -94,6 +92,7 @@ void	str_word(t_list **tokens, char **temp)
 	char	*t;
 	char	*s;
 	char	*start;
+	t_token	*token;
 
 	start = *temp;
 	while (**temp && **temp != ' ' && **temp != '\'' && **temp != '\"' 
@@ -103,6 +102,14 @@ void	str_word(t_list **tokens, char **temp)
 	s = malloc(len + 1);
 	if (!s)
 		return ;
+	token = malloc(sizeof(t_token));
+	if (!token)
+	{
+		free(s);
+		return ;
+	}
 	ft_strlcpy(s, start, len + 1);
-	add_token(tokens, s);
+	token->value = s;
+	token->type = WORD;
+	add_token(tokens, token);
 }
