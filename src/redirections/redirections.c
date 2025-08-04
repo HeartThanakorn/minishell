@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tthajan <tthajan@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:57:08 by tthajan           #+#    #+#             */
-/*   Updated: 2025/07/31 18:02:34 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/04 10:00:13 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <sys/stat.h>
+#include <errno.h>
 
 int	redirect_input(char *filename)
 {
@@ -82,7 +84,7 @@ int	handle_heredoc(char *delimiter)
 		perror("pipe");
 		return (-1);
 	}
-	printf("heredoc> ");
+	write(STDOUT_FILENO, "heredoc> ", 9);
 	while ((line = get_next_line(STDIN_FILENO)) != NULL)
 	{
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0 &&
@@ -93,7 +95,7 @@ int	handle_heredoc(char *delimiter)
 		}
 		write(pipefd[1], line, ft_strlen(line));
 		free(line);
-		printf("heredoc> ");
+		write(STDOUT_FILENO, "heredoc> ", 9);
 	}
 	close(pipefd[1]);
 	if (dup2(pipefd[0], STDIN_FILENO) == -1)

@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   path_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmaeda <kmaeda@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 10:53:40 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/01 10:54:16 by kmaeda           ###   ########.fr       */
+/*   Updated: 2025/08/04 18:27:11 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_env.h"
+#include <stdlib.h>
 
 char	*get_path_s(t_list *env_list)
 {

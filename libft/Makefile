@@ -20,11 +20,6 @@ BONUS_SRCS = ft_lstnew.c ft_lstadd_front.c ft_lstsize.c ft_lstlast.c \
 			 ft_lstadd_back.c ft_lstdelone.c ft_lstclear.c ft_lstiter.c \
 			 ft_lstmap.c
 
-GNL_BONUS_SRCS = get_next_line/get_next_line_bonus.c \
-				 get_next_line/get_next_line_utils_bonus.c
-
-BONUS_SRCS += $(GNL_BONUS_SRCS)
-
 OBJS = $(SRCS:.c=.o)
 BONUS_OBJS = $(BONUS_SRCS:.c=.o)
 
@@ -45,6 +40,7 @@ bonus: $(OBJS) $(BONUS_OBJS)
 
 clean:
 	rm -f $(OBJS) $(BONUS_OBJS)
+	rm -f get_next_line/get_next_line_bonus.o get_next_line/get_next_line_utils_bonus.o
 
 fclean: clean
 	rm -f $(NAME)

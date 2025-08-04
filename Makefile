@@ -2,20 +2,39 @@ NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 LDLIBS = -lreadline
-SRCS = main.c builtins.c signals.c redirections.c
-OBJS = $(SRCS:.c=.o)
-LIBS = -lreadline
+
+# Directories
+SRC_DIR = src
+BUILTIN_DIR = $(SRC_DIR)/builtins
+MINISHELL_DIR = $(SRC_DIR)/minishell
+PARSER_DIR = $(SRC_DIR)/parser
+REDIRECT_DIR = $(SRC_DIR)/redirections
+SIGNAL_DIR = $(SRC_DIR)/signal
+TOKEN_DIR = $(SRC_DIR)/token
+INCLUDE_DIR = include
 LIBFT_DIR = libft
+
+# Source files
+BUILTIN_SRCS = $(BUILTIN_DIR)/builtins.c
+MINISHELL_SRCS = $(MINISHELL_DIR)/minishell.c $(MINISHELL_DIR)/env_utils.c $(MINISHELL_DIR)/path_utils.c
+REDIRECT_SRCS = $(REDIRECT_DIR)/redirections.c
+SIGNAL_SRCS = $(SIGNAL_DIR)/signals.c
+TOKEN_SRCS = $(TOKEN_DIR)/token.c $(TOKEN_DIR)/token_utils.c
+
+SRCS = $(BUILTIN_SRCS) $(MINISHELL_SRCS) $(REDIRECT_SRCS) $(SIGNAL_SRCS) $(TOKEN_SRCS)
+OBJS = $(SRCS:.c=.o)
+
+# Libraries
 LIBFT = $(LIBFT_DIR)/libft.a
-INCLUDES = -I$(LIBFT_DIR) -I$(LIBFT_DIR)/get_next_line
+INCLUDES = -I$(INCLUDE_DIR) -I$(LIBFT_DIR) -I$(LIBFT_DIR)/get_next_line
 
 all: $(LIBFT) $(NAME)
 
 $(LIBFT):
-	$(MAKE) -C $(LIBFT_DIR)
+	$(MAKE) -C $(LIBFT_DIR) bonus
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDLIBS) -o $(NAME) $(LIBS)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDLIBS) -o $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
