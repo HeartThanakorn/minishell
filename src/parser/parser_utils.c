@@ -10,7 +10,30 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "minishell_env.h"
+
+void	ft_init_cmd(t_cmd *cmd)
+{
+	cmd->cmd = NULL;
+	cmd->args = NULL;
+	cmd->infile = NULL;
+	cmd->outfile = NULL;
+	cmd->next = NULL;
+	cmd->is_infile = 0;
+	cmd->here_doc = 0;
+	cmd->append = 0;
+	cmd->next = NULL;
+}
+
+void	add_arg(t_list **args_list, char *value)
+{
+	t_list	*new_node;
+
+	new_node = ft_lstnew(ft_strdup(value));
+	if (!new_node)
+		return ;
+	ft_lstadd_back(args_list, new_node);
+}
 
 char	**list_to_array(t_list *lst)
 {

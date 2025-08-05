@@ -10,21 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "minishell_env.h"
+#include "token.h"
 
-void	ft_init_cmd(t_cmd *cmd)
-{
-	cmd->cmd = NULL;
-	cmd->args = NULL;
-	cmd->infile = NULL;
-	cmd->outfile = NULL;
-	cmd->next = NULL;
-	cmd->is_infile = 0;
-	cmd->here_doc = 0;
-	cmd->append = 0;
-}
-
-int	parse_redir(t_list **tokens, t_cmd *cmd)
+static int	parse_redir(t_list **tokens, t_cmd *cmd)
 {
 	t_token	*tok;
 
@@ -47,30 +36,30 @@ int	parse_redir(t_list **tokens, t_cmd *cmd)
 		cmd->delim = ft_strdup(tok->value);
 	else
 		cmd->outfile = ft_strdup(tok->value);
+	*tokens = (*tokens)->next;
 	return (0);
 }
 
-void	parse_args(t_list **tokens, t_cmd *cmd)
+static void	parse_args(t_list **tokens, t_cmd *cmd)
 {
 	t_token	*tok;
 	t_list	*args_list;
-	t_list	*new_node;
 
 	args_list = NULL;
-	if (!tokens || !*tokens)
+	if (!tokens || !*tokens || !(*tokens)->content)
 		return ;
 	tok = (t_token *)(*tokens)->content;
+	if (!tok->value)
+		return ;
 	cmd->cmd = ft_strdup(tok->value);
-	new_node = ft_lstnew(ft_strdup(cmd->cmd));
-	ft_lstadd_back(&args_list, new_node);
+	add_arg(&args_list, cmd->cmd);
 	*tokens = (*tokens)->next;
 	while (*tokens)
 	{
 		tok = (t_token *)(*tokens)->content;
 		if (tok->type != WORD)
 			break ;
-		new_node = ft_lstnew(ft_strdup(tok->value));
-		ft_lstadd_back(&args_list, new_node);
+		add_arg(&args_list, tok->value);
 		*tokens = (*tokens)->next;
 	}
 	cmd->args = list_to_array(args_list);
@@ -78,10 +67,36 @@ void	parse_args(t_list **tokens, t_cmd *cmd)
 	return ;
 }
 
-t_cmd	*create_cmd(t_list **tokens)
+static int	handle_token(t_list **tokens, t_cmd *cmd)
 {
-	t_cmd	*cmd;
 	t_token	*tok;
+
+	tok = (t_token *)(*tokens)->content;
+	if (tok->type == REDIR_IN || tok->type == REDIR_OUT 
+		|| tok->type == REDIR_APPEND || tok->type == REDIR_HERE_DOC)
+	{
+		if (parse_redir(tokens, cmd))
+			return (1);
+	}
+	else if (tok->type == WORD)
+	{
+		parse_args(tokens, cmd);
+		return (0);
+	}
+	else if (tok->type == PIPE)
+	{
+		*tokens = (*tokens)->next;
+		return (2);
+	}
+	else
+		*tokens = (*tokens)->next;
+	return (0);
+}
+
+static t_cmd	*create_cmd(t_list **tokens)
+{
+	int		status;
+	t_cmd	*cmd;
 
 	if (!tokens || !*tokens)
 		return (NULL);
@@ -89,17 +104,19 @@ t_cmd	*create_cmd(t_list **tokens)
 	if (!cmd)
 		return (NULL);
 	ft_init_cmd(cmd);
-	tok = (t_token *)(*tokens)->content;
-	if (tok->type == REDIR_IN || tok->type == REDIR_OUT 
-		|| tok->type == REDIR_APPEND || tok->type == REDIR_HERE_DOC)
+	while (*tokens)
 	{
-		if (parse_redir(tokens, cmd))
-			return (NULL);
+		status = handle_token(tokens, cmd);
+		if (status == 1)
+			return (free(cmd), NULL);
+		else if (status == 2)
+			break ;
 	}
-	else if (tok->type == WORD)
-		parse_args(tokens, cmd);
-	else if (tok->type == PIPE)
-		*tokens = (*tokens)->next;
+	if (!cmd->cmd && !cmd->infile && !cmd->outfile && !cmd->here_doc)
+	{
+		free(cmd);
+		return (NULL);
+	}
 	return (cmd);
 }
 
@@ -108,24 +125,26 @@ t_cmd	*parse(t_list *tokens)
 	t_cmd	*cmd_head;
 	t_cmd	*cmd;
 	t_cmd	*new_cmd;
+	t_token	*tok;
 
 	cmd_head = NULL;
 	cmd = NULL;
 	while (tokens)
 	{
-		new_cmd = create_cmd(&tokens);
-		if (!new_cmd)
-		{
-			free_cmd_lst(cmd_head);
-			return (NULL);
-		}
-		if (!cmd_head)
-			cmd_head = new_cmd;
-		else
-			cmd->next = new_cmd;
-		cmd = new_cmd;
-		if (tokens && ((t_token *)tokens->content)->type == PIPE)
+		tok = (t_token *)tokens->content;
+		if (tok->type == PIPE)
 			tokens = tokens->next;
+		else
+		{
+			new_cmd = create_cmd(&tokens);
+			if (!new_cmd)
+				return (free_cmd_lst(cmd_head), NULL);
+			if (!cmd_head)
+				cmd_head = new_cmd;
+			else
+				cmd->next = new_cmd;
+			cmd = new_cmd;
+		}
 	}
 	return (cmd_head);
 }

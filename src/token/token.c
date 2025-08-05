@@ -15,17 +15,23 @@
 void	free_tokens(t_list *tokens)
 {
 	t_list	*temp;
+	t_token	*token;
 
 	while (tokens)
 	{
 		temp = tokens->next;
-		free(tokens->content);
+		token = (t_token *)tokens->content;
+		if (token)
+		{
+			free(token->value);
+			free(token);
+		}
 		free(tokens);
 		tokens = temp;
 	}
 }
 
-char	*str_extract(char **temp)
+static char	*str_extract(char **temp)
 {
 	int		size;
 	char	quote;
@@ -47,7 +53,7 @@ char	*str_extract(char **temp)
 	return (s);
 }
 
-void	str_quote(t_list **tokens, char **temp)
+static void	str_quote(t_list **tokens, char **temp)
 {
 	t_token	*token;
 	char	*s;
@@ -69,7 +75,6 @@ void	str_quote(t_list **tokens, char **temp)
 t_list	*tokenize(const char *input)
 {
 	int		i;
-	char	*s;
 	char	*temp;
 	t_list	*tokens;
 

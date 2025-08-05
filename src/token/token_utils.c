@@ -12,11 +12,11 @@
 
 #include "token.h"
 
-void	add_token(t_list **tokens, char *s)
+void	add_token(t_list **tokens, t_token *token)
 {
 	t_list	*new_node;
 
-	new_node = ft_lstnew(s);
+	new_node = ft_lstnew(token);
 	if (!new_node)
 		return ;
 	ft_lstadd_back(tokens, new_node);
@@ -89,7 +89,6 @@ void	str_op(t_list **tokens, char **temp)
 void	str_word(t_list **tokens, char **temp)
 {
 	int		len;
-	char	*t;
 	char	*s;
 	char	*start;
 	t_token	*token;
