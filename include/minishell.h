@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:49:45 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 14:21:07 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 15:23:04 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,21 @@
 #include <readline/history.h>
 #include "libft.h"
 #include "get_next_line.h"
-#include "minishell_env.h"
+#include "token.h"
+
+// Command structure for parsing
+typedef struct s_cmd
+{
+	int				is_infile;
+	int				append;
+	int				here_doc;
+	char			*delim;
+	char			*cmd;
+	char			**args;
+	char			*infile;
+	char			*outfile;
+	struct s_cmd	*next;
+}	t_cmd;
 
 // Global variable for signal handling - stores only signal number
 extern int	g_signal;
@@ -42,11 +56,11 @@ int	ft_export(char **args);
 int	ft_unset(char **args);
 
 // Command execution
-void	exec_cmds(t_cmd *cmd_list, t_shell *shell);
-int		exec_external_cmd(char **args, char **paths);
-void	exec_pipeline(t_cmd *cmd_list, t_shell *shell);
+void	exec_cmds(t_cmd *cmd_list);
+int		exec_external_cmd(char **args);
+void	exec_pipeline(t_cmd *cmd_list);
 int		count_commands(t_cmd *cmd_list);
-void	exec_single_cmd(t_cmd *cmd, t_shell *shell, int input_fd, int output_fd);
+void	exec_single_cmd(t_cmd *cmd, int input_fd, int output_fd);
 
 // Signal handling
 void	setup_signals(void);
@@ -62,14 +76,24 @@ int	handle_heredoc(char *delimiter);
 int	create_pipe(int *pipefd);
 
 // Pipe functions
-void	exec_pipeline(t_cmd *cmd_list, t_shell *shell);
+void	exec_pipeline(t_cmd *cmd_list);
 int		count_commands(t_cmd *cmd_list);
-void	exec_single_cmd(t_cmd *cmd, t_shell *shell, int input_fd, int output_fd);
+void	exec_single_cmd(t_cmd *cmd, int input_fd, int output_fd);
 
 // Environment variable access
 extern char	**environ;
 
 // Environment variable expansion
 char	*expand_env_vars(char *str);
+void	set_last_exit_status(int status);
+int		get_last_exit_status(void);
+
+// Parser
+t_cmd	*parse(t_list *tokens);
+char	**list_to_array(t_list *lst);
+void	free_array(char **array);
+void	free_cmd_lst(t_cmd *cmd);
+void	ft_init_cmd(t_cmd *cmd);
+void	add_arg(t_list **args_list, char *value);
 
 #endif

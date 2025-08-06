@@ -6,12 +6,13 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:02:48 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 10:51:32 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 15:42:11 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <errno.h>
+#include <termios.h>
 
 // Global variable definition for signal handling
 int	g_signal = 0;

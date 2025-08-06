@@ -6,12 +6,11 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 14:45:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 14:21:07 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 15:23:04 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "minishell_env.h"
 
 int	count_commands(t_cmd *cmd_list)
 {
@@ -29,7 +28,7 @@ int	count_commands(t_cmd *cmd_list)
 	return (count);
 }
 
-void	exec_pipeline(t_cmd *cmd_list, t_shell *shell)
+void	exec_pipeline(t_cmd *cmd_list)
 {
 	int		pipefd[2];
 	int		input_fd;
@@ -88,7 +87,7 @@ void	exec_pipeline(t_cmd *cmd_list, t_shell *shell)
 			}
 
 			// Handle redirections for this command
-			exec_single_cmd(current, shell, STDIN_FILENO, STDOUT_FILENO);
+			exec_single_cmd(current, STDIN_FILENO, STDOUT_FILENO);
 			exit(0);
 		}
 		else if (pids[i] > 0)
@@ -119,13 +118,21 @@ void	exec_pipeline(t_cmd *cmd_list, t_shell *shell)
 	while (i < cmd_count)
 	{
 		waitpid(pids[i], &status, 0);
+		// The exit status of the pipeline is the exit status of the last command
+		if (i == cmd_count - 1)
+		{
+			if (WIFEXITED(status))
+				set_last_exit_status(WEXITSTATUS(status));
+			else
+				set_last_exit_status(1); // Error if not normally exited
+		}
 		i++;
 	}
 
 	free(pids);
 }
 
-void	exec_single_cmd(t_cmd *cmd, t_shell *shell, int input_fd, int output_fd)
+void	exec_single_cmd(t_cmd *cmd, int input_fd, int output_fd)
 {
 	int	exit_status;
 
@@ -136,18 +143,15 @@ void	exec_single_cmd(t_cmd *cmd, t_shell *shell, int input_fd, int output_fd)
 		return;
 
 	// Handle input redirection
-	if (cmd->is_infile)
+	if (cmd->here_doc)
 	{
-		if (cmd->here_doc)
-		{
-			if (handle_heredoc(cmd->delim) == -1)
-				return;
-		}
-		else if (cmd->infile)
-		{
-			if (redirect_input(cmd->infile) == -1)
-				return;
-		}
+		if (handle_heredoc(cmd->delim) == -1)
+			return;
+	}
+	else if (cmd->is_infile && cmd->infile)
+	{
+		if (redirect_input(cmd->infile) == -1)
+			return;
 	}
 
 	// Handle output redirection
@@ -169,14 +173,19 @@ void	exec_single_cmd(t_cmd *cmd, t_shell *shell, int input_fd, int output_fd)
 	if (is_builtin(cmd->cmd))
 	{
 		exit_status = execute_builtin(cmd->args);
-		(void)exit_status; // TODO: Handle exit status properly
+		set_last_exit_status(exit_status);
 	}
 	else
 	{
-		exit_status = exec_external_cmd(cmd->args, shell->paths);
+		exit_status = exec_external_cmd(cmd->args);
 		if (exit_status == -1)
 		{
 			ft_printf("minishell: %s: command not found\n", cmd->cmd);
+			set_last_exit_status(127); // Command not found
+		}
+		else
+		{
+			set_last_exit_status(exit_status);
 		}
 	}
 }
