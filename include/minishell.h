@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:49:45 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 16:48:48 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 17:12:48 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,6 @@ int		ft_unset(char **args);
 // Command execution
 void	exec_cmds(t_cmd *cmd_list);
 int		exec_external_cmd(char **args);
-void	exec_pipeline(t_cmd *cmd_list);
-int		count_commands(t_cmd *cmd_list);
-void	exec_single_cmd(t_cmd *cmd, int input_fd, int output_fd);
 
 // Signal handling
 void	setup_signals(void);
@@ -79,6 +76,12 @@ int		create_pipe(int *pipefd);
 void	exec_pipeline(t_cmd *cmd_list);
 int		count_commands(t_cmd *cmd_list);
 void	exec_single_cmd(t_cmd *cmd, int input_fd, int output_fd);
+void	handle_child_process(t_cmd *current, int input_fd, int *pipefd);
+void	handle_parent_process(int *input_fd, int *pipefd, t_cmd *current);
+void	handle_input_redirection(t_cmd *cmd);
+void	handle_output_redirection(t_cmd *cmd);
+void	execute_command(t_cmd *cmd);
+void	wait_for_children(pid_t *pids, int cmd_count);
 
 // Environment variable access
 extern char	**environ;
