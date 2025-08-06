@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:32:15 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 13:19:34 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 13:39:02 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -349,19 +349,6 @@ int	ft_unset(char **args)
 	return (exit_status);
 }
 
-// Get environment variable value
-char	*get_env_value(char *var_name)
-{
-	char	*value;
-
-	if (!var_name)
-		return (NULL);
-	value = getenv(var_name);
-	if (value)
-		return (ft_strdup(value));
-	return (ft_strdup(""));
-}
-
 // Expand environment variables in a string
 char	*expand_env_vars(char *str)
 {
@@ -397,13 +384,10 @@ char	*expand_env_vars(char *str)
 				return (NULL);
 			ft_strlcpy(var_name, str + var_start, var_len + 1);
 			
-			// Get variable value
-			var_value = get_env_value(var_name);
+			// Get variable value using getenv directly
+			var_value = getenv(var_name);
 			if (var_value)
-			{
 				result_len += ft_strlen(var_value);
-				free(var_value);
-			}
 			free(var_name);
 			i = j;
 		}
@@ -441,13 +425,12 @@ char	*expand_env_vars(char *str)
 			}
 			ft_strlcpy(var_name, str + var_start, var_len + 1);
 			
-			// Get variable value and copy to result
-			var_value = get_env_value(var_name);
+			// Get variable value and copy to result using getenv directly
+			var_value = getenv(var_name);
 			if (var_value)
 			{
 				ft_strlcpy(result + j, var_value, ft_strlen(var_value) + 1);
 				j += ft_strlen(var_value);
-				free(var_value);
 			}
 			free(var_name);
 			i = var_start + var_len;
