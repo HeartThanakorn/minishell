@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmaeda <kmaeda@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 14:06:03 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/01 17:57:12 by kmaeda           ###   ########.fr       */
+/*   Updated: 2025/08/06 12:53:37 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ static void	str_quote(t_list **tokens, char **temp)
 {
 	t_token	*token;
 	char	*s;
+	char	quote_char;
 
+	quote_char = **temp;
 	s = str_extract(temp);
 	if (!s)
 		return ;
@@ -69,6 +71,12 @@ static void	str_quote(t_list **tokens, char **temp)
 	}
 	token->value = s;
 	token->type = WORD;
+	if (quote_char == '\'')
+		token->quote_type = SINGLE_QUOTE;
+	else if (quote_char == '"')
+		token->quote_type = DOUBLE_QUOTE;
+	else
+		token->quote_type = NO_QUOTE;
 	add_token(tokens, token);
 }
 

@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:49:45 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 11:30:40 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 12:27:42 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,9 @@ int	create_pipe(int *pipefd);
 
 // Environment variable access
 extern char	**environ;
+
+// Environment variable expansion
+char	*expand_env_vars(char *str);
+char	*get_env_value(char *var_name);
 
 #endif

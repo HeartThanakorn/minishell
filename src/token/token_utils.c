@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmaeda <kmaeda@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 17:44:55 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/01 17:49:12 by kmaeda           ###   ########.fr       */
+/*   Updated: 2025/08/06 12:39:02 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	str_op(t_list **tokens, char **temp)
 	if (!token)
 		return (free(s), (void)0);
 	token->value = s;
+	token->quote_type = NO_QUOTE;
 	if (ft_strncmp(s, ">>", 3) == 0)
 		token->type = REDIR_APPEND;
 	else if (ft_strncmp(s, "<<", 3) == 0)
@@ -110,5 +111,6 @@ void	str_word(t_list **tokens, char **temp)
 	ft_strlcpy(s, start, len + 1);
 	token->value = s;
 	token->type = WORD;
+	token->quote_type = NO_QUOTE;
 	add_token(tokens, token);
 }

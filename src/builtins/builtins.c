@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:32:15 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/04 17:17:05 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 12:53:41 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,66 +64,12 @@ int	ft_pwd(void)
 	return (0);
 }
 
-// Print string with escape sequence interpretation
-void	print_with_escapes(char *str)
-{
-	int	i;
-
-	i = 0;
-	// Debug: print the raw string
-	// fprintf(stderr, "DEBUG: Raw string: '%s'\n", str);
-	while (str[i])
-	{
-		if (str[i] == '\\' && str[i + 1])
-		{
-			if (str[i + 1] == 'n')
-			{
-				printf("\n");
-				i += 2;
-			}
-			else if (str[i + 1] == 't')
-			{
-				printf("\t");
-				i += 2;
-			}
-			else if (str[i + 1] == 'r')
-			{
-				printf("\r");
-				i += 2;
-			}
-			else if (str[i + 1] == '\\')
-			{
-				printf("\\");
-				i += 2;
-			}
-			else if (str[i + 1] == '"')
-			{
-				printf("\"");
-				i += 2;
-			}
-			else if (str[i + 1] == '\'')
-			{
-				printf("'");
-				i += 2;
-			}
-			else
-			{
-				printf("%c", str[i]);
-				i++;
-			}
-		}
-		else
-		{
-			printf("%c", str[i]);
-			i++;
-		}
-	}
-}
-
 int	ft_echo(char **args)
 {
 	int	i;
 	int	newline;
+	char	*expanded;
+	char	*arg_to_process;
 
 	i = 1;
 	newline = 1;
@@ -137,7 +83,42 @@ int	ft_echo(char **args)
 	
 	while (args[i])
 	{
-		printf("%s", args[i]);
+		// Check quote type markers
+		if (args[i][0] == '\001')
+		{
+			// Single quoted - prevent ALL meta-character interpretation
+			arg_to_process = args[i] + 1;
+			printf("%s", arg_to_process);
+		}
+		else if (args[i][0] == '\002')
+		{
+			// Double quoted - prevent meta-characters EXCEPT $ (dollar sign)
+			arg_to_process = args[i] + 1;
+			expanded = expand_env_vars(arg_to_process);
+			if (expanded)
+			{
+				printf("%s", expanded);
+				free(expanded);
+			}
+			else
+			{
+				printf("%s", arg_to_process);
+			}
+		}
+		else
+		{
+			// No quotes - expand variables and interpret all meta-characters
+			expanded = expand_env_vars(args[i]);
+			if (expanded)
+			{
+				printf("%s", expanded);
+				free(expanded);
+			}
+			else
+			{
+				printf("%s", args[i]);
+			}
+		}
 		if (args[i + 1])
 			printf(" ");
 		i++;
@@ -193,19 +174,6 @@ int	ft_env(char **args)
 		i++;
 	}
 	return (0);
-}
-
-void	print_env(void)
-{
-	extern char	**environ;
-	int		i;
-
-	i = 0;
-	while (environ[i])
-	{
-		printf("%s\n", environ[i]);
-		i++;
-	}
 }
 
 int	ft_cd(char **args)
@@ -265,15 +233,22 @@ int	ft_export(char **args)
 	char	*equal_sign;
 	char	*var_name;
 	char	*var_value;
+	extern char	**environ;
 
 	i = 1;
 	if (!args[1])
 	{
-		// Print all environment variables in sorted order (basic implementation)
-		print_env();
+		// Print all environment variables (same logic as ft_env)
+		i = 0;
+		while (environ[i])
+		{
+			printf("%s\n", environ[i]);
+			i++;
+		}
 		return (0);
 	}
 
+	i = 1;
 	while (args[i])
 	{
 		equal_sign = ft_strchr(args[i], '=');
@@ -323,4 +298,116 @@ int	ft_unset(char **args)
 		i++;
 	}
 	return (0);
+}
+
+// Get environment variable value
+char	*get_env_value(char *var_name)
+{
+	char	*value;
+
+	if (!var_name)
+		return (NULL);
+	value = getenv(var_name);
+	if (value)
+		return (ft_strdup(value));
+	return (ft_strdup(""));
+}
+
+// Expand environment variables in a string
+char	*expand_env_vars(char *str)
+{
+	char	*result;
+	char	*var_name;
+	char	*var_value;
+	int		i;
+	int		j;
+	int		var_start;
+	int		var_len;
+	size_t	result_len;
+
+	if (!str)
+		return (NULL);
+	
+	// Calculate required length for result string
+	result_len = 0;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$' && str[i + 1] && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
+		{
+			// Find end of variable name
+			var_start = i + 1;
+			j = var_start;
+			while (str[j] && (ft_isalnum(str[j]) || str[j] == '_'))
+				j++;
+			var_len = j - var_start;
+			
+			// Extract variable name
+			var_name = malloc(var_len + 1);
+			if (!var_name)
+				return (NULL);
+			ft_strlcpy(var_name, str + var_start, var_len + 1);
+			
+			// Get variable value
+			var_value = get_env_value(var_name);
+			if (var_value)
+			{
+				result_len += ft_strlen(var_value);
+				free(var_value);
+			}
+			free(var_name);
+			i = j;
+		}
+		else
+		{
+			result_len++;
+			i++;
+		}
+	}
+	
+	// Allocate result string
+	result = malloc(result_len + 1);
+	if (!result)
+		return (NULL);
+	
+	// Build result string
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (str[i] == '$' && str[i + 1] && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
+		{
+			// Find end of variable name
+			var_start = i + 1;
+			var_len = 0;
+			while (str[var_start + var_len] && (ft_isalnum(str[var_start + var_len]) || str[var_start + var_len] == '_'))
+				var_len++;
+			
+			// Extract variable name
+			var_name = malloc(var_len + 1);
+			if (!var_name)
+			{
+				free(result);
+				return (NULL);
+			}
+			ft_strlcpy(var_name, str + var_start, var_len + 1);
+			
+			// Get variable value and copy to result
+			var_value = get_env_value(var_name);
+			if (var_value)
+			{
+				ft_strlcpy(result + j, var_value, ft_strlen(var_value) + 1);
+				j += ft_strlen(var_value);
+				free(var_value);
+			}
+			free(var_name);
+			i = var_start + var_len;
+		}
+		else
+		{
+			result[j++] = str[i++];
+		}
+	}
+	result[j] = '\0';
+	return (result);
 }

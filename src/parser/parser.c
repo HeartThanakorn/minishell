@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmaeda <kmaeda@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:48:15 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/04 18:40:33 by kmaeda           ###   ########.fr       */
+/*   Updated: 2025/08/06 12:41:41 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ static void	parse_args(t_list **tokens, t_cmd *cmd)
 {
 	t_token	*tok;
 	t_list	*args_list;
+	char	*arg_with_quote_info;
 
 	args_list = NULL;
 	if (!tokens || !*tokens || !(*tokens)->content)
@@ -59,7 +60,36 @@ static void	parse_args(t_list **tokens, t_cmd *cmd)
 		tok = (t_token *)(*tokens)->content;
 		if (tok->type != WORD)
 			break ;
-		add_arg(&args_list, tok->value);
+		// Handle different quote types with special markers
+		if (tok->quote_type == SINGLE_QUOTE)
+		{
+			// Single quote marker: \001
+			arg_with_quote_info = malloc(ft_strlen(tok->value) + 3);
+			if (arg_with_quote_info)
+			{
+				ft_strlcpy(arg_with_quote_info, "\001", 2);
+				ft_strlcat(arg_with_quote_info, tok->value, ft_strlen(tok->value) + 2);
+				add_arg(&args_list, arg_with_quote_info);
+				free(arg_with_quote_info);
+			}
+		}
+		else if (tok->quote_type == DOUBLE_QUOTE)
+		{
+			// Double quote marker: \002
+			arg_with_quote_info = malloc(ft_strlen(tok->value) + 3);
+			if (arg_with_quote_info)
+			{
+				ft_strlcpy(arg_with_quote_info, "\002", 2);
+				ft_strlcat(arg_with_quote_info, tok->value, ft_strlen(tok->value) + 2);
+				add_arg(&args_list, arg_with_quote_info);
+				free(arg_with_quote_info);
+			}
+		}
+		else
+		{
+			// No quotes - normal processing
+			add_arg(&args_list, tok->value);
+		}
 		*tokens = (*tokens)->next;
 	}
 	cmd->args = list_to_array(args_list);

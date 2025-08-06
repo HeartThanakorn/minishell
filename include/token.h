@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmaeda <kmaeda@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 14:06:32 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/01 14:16:30 by kmaeda           ###   ########.fr       */
+/*   Updated: 2025/08/06 12:39:02 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,17 @@ typedef enum e_tok
 	REDIR_HERE_DOC
 }	t_TokenType;
 
+typedef enum e_quote
+{
+	NO_QUOTE,
+	SINGLE_QUOTE,
+	DOUBLE_QUOTE
+}	t_QuoteType;
+
 typedef struct s_token
 {
 	t_TokenType	type;
+	t_QuoteType	quote_type;
 	char		*value;
 }	t_token;
 
