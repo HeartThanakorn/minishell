@@ -20,7 +20,7 @@ BUILTIN_SRCS = $(BUILTIN_DIR)/builtins.c $(BUILTIN_DIR)/echo.c $(BUILTIN_DIR)/pw
 MINISHELL_SRCS = $(MINISHELL_DIR)/minishell.c
 PARSER_SRCS = $(PARSER_DIR)/parser.c $(PARSER_DIR)/parser_utils.c
 PIPES_SRCS = $(PIPES_DIR)/pipes.c $(PIPES_DIR)/pipes_utils.c $(PIPES_DIR)/pipes_redirection.c
-REDIRECT_SRCS = $(REDIRECT_DIR)/redirections.c
+REDIRECT_SRCS = $(REDIRECT_DIR)/redirections.c $(REDIRECT_DIR)/redirections_utils.c
 SIGNAL_SRCS = $(SIGNAL_DIR)/signals.c
 TOKEN_SRCS = $(TOKEN_DIR)/token.c $(TOKEN_DIR)/token_utils.c
 
