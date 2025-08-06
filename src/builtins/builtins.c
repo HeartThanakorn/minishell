@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:32:15 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 12:53:41 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 13:19:34 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,6 +227,27 @@ int	ft_cd(char **args)
 	return (0);
 }
 
+// Helper function to validate variable name
+static int	is_valid_identifier(char *str)
+{
+	int	i;
+
+	if (!str || !str[0])
+		return (0);
+	// First character must be letter or underscore
+	if (!ft_isalpha(str[0]) && str[0] != '_')
+		return (0);
+	// Rest can be alphanumeric or underscore
+	i = 1;
+	while (str[i])
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	ft_export(char **args)
 {
 	int	i;
@@ -254,7 +275,13 @@ int	ft_export(char **args)
 		equal_sign = ft_strchr(args[i], '=');
 		if (!equal_sign)
 		{
-			// Variable without value - set it to empty string
+			// Variable without value - validate name first
+			if (!is_valid_identifier(args[i]))
+			{
+				fprintf(stderr, "export: `%s': not a valid identifier\n", args[i]);
+				return (1);
+			}
+			// Set variable with empty value
 			if (setenv(args[i], "", 1) != 0)
 			{
 				perror("export");
@@ -267,6 +294,14 @@ int	ft_export(char **args)
 			*equal_sign = '\0';
 			var_name = args[i];
 			var_value = equal_sign + 1;
+			
+			// Validate variable name
+			if (!is_valid_identifier(var_name))
+			{
+				fprintf(stderr, "export: `%s': not a valid identifier\n", var_name);
+				*equal_sign = '='; // restore original string
+				return (1);
+			}
 			
 			if (setenv(var_name, var_value, 1) != 0)
 			{
@@ -284,20 +319,34 @@ int	ft_export(char **args)
 int	ft_unset(char **args)
 {
 	int	i;
+	int	exit_status;
 
 	i = 1;
+	exit_status = 0;
+	
 	if (!args[1])
 		return (0);
+	
 	while (args[i])
 	{
-		if (unsetenv(args[i]) != 0)
+		// Validate variable name
+		if (!is_valid_identifier(args[i]))
 		{
-			perror("unset");
-			return (1);
+			fprintf(stderr, "unset: `%s': not a valid identifier\n", args[i]);
+			exit_status = 1;
+		}
+		else
+		{
+			// Unset the variable
+			if (unsetenv(args[i]) != 0)
+			{
+				perror("unset");
+				exit_status = 1;
+			}
 		}
 		i++;
 	}
-	return (0);
+	return (exit_status);
 }
 
 // Get environment variable value
