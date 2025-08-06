@@ -26,6 +26,7 @@ typedef struct s_env
 
 typedef struct s_shell
 {
+	int		cmd_count;
 	t_list	*env_list;
 	char	**paths;
 }	t_shell;
@@ -35,6 +36,11 @@ typedef struct s_cmd
 	int				is_infile;
 	int				append;
 	int				here_doc;
+	int				fd[2];
+	int				prev_fd;
+	int				in_fd;
+	int				out_fd;
+	char			*path;
 	char			*delim;
 	char			*cmd;
 	char			**args;

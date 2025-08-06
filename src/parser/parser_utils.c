@@ -22,7 +22,6 @@ void	ft_init_cmd(t_cmd *cmd)
 	cmd->is_infile = 0;
 	cmd->here_doc = 0;
 	cmd->append = 0;
-	cmd->next = NULL;
 }
 
 void	add_arg(t_list **args_list, char *value)
@@ -33,6 +32,18 @@ void	add_arg(t_list **args_list, char *value)
 	if (!new_node)
 		return ;
 	ft_lstadd_back(args_list, new_node);
+}
+
+void	free_array(char **array)
+{
+	int	i;
+
+	if (!array)
+		return ;
+	i = 0;
+	while (array[i])
+		free(array[i++]);
+	free(array);
 }
 
 char	**list_to_array(t_list *lst)
@@ -48,23 +59,17 @@ char	**list_to_array(t_list *lst)
 		return (NULL);
 	while (lst)
 	{
-		array[i++] = ft_strdup((char *)lst->content);
+		array[i] = ft_strdup((char *)lst->content);
+		if (!array[i])
+		{
+			free_array(array);
+			return (NULL);
+		}
+		i++;
 		lst = lst->next;
 	}
 	array[i] = NULL;
 	return (array);
-}
-
-void	free_array(char **array)
-{
-	int	i;
-
-	if (!array)
-		return ;
-	i = 0;
-	while (array[i])
-		free(array[i++]);
-	free(array);
 }
 
 void	free_cmd_lst(t_cmd *cmd)
