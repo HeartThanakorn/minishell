@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 17:30:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 17:12:48 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 18:45:06 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,39 +41,4 @@ void	handle_output_redirection(t_cmd *cmd)
 				return ;
 		}
 	}
-}
-
-void	execute_command(t_cmd *cmd)
-{
-	int	exit_status;
-
-	if (is_builtin(cmd->cmd))
-	{
-		exit_status = execute_builtin(cmd->args);
-		set_last_exit_status(exit_status);
-	}
-	else
-	{
-		exit_status = exec_external_cmd(cmd->args);
-		if (exit_status == -1)
-		{
-			ft_printf("minishell: %s: command not found\n", cmd->cmd);
-			set_last_exit_status(127);
-		}
-		else
-		{
-			set_last_exit_status(exit_status);
-		}
-	}
-}
-
-void	exec_single_cmd(t_cmd *cmd, int input_fd, int output_fd)
-{
-	(void)input_fd;
-	(void)output_fd;
-	if (!cmd || !cmd->cmd)
-		return ;
-	handle_input_redirection(cmd);
-	handle_output_redirection(cmd);
-	execute_command(cmd);
 }

@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:06:17 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/06 18:29:55 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 18:55:03 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ void	ft_init_cmd(t_cmd *cmd)
 	cmd->args = NULL;
 	cmd->infile = NULL;
 	cmd->outfile = NULL;
+	cmd->delim = NULL;
 	cmd->next = NULL;
 	cmd->is_infile = 0;
 	cmd->here_doc = 0;
 	cmd->append = 0;
-	cmd->next = NULL;
 }
 
 void	add_arg(t_list **args_list, char *value)
@@ -85,7 +85,8 @@ void	free_cmd_lst(t_cmd *cmd)
 	while (cmd)
 	{
 		next = cmd->next;
-		free(cmd->cmd);
+		if (cmd->cmd)
+			free(cmd->cmd);
 		if (cmd->args)
 		{
 			i = 0;

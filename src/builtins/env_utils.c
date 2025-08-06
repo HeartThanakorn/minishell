@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 16:20:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 17:00:46 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 18:45:06 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,33 +35,4 @@ int	get_last_exit_status(void)
 	else
 		status = 0;
 	return (status);
-}
-
-char	*expand_env_vars(char *str)
-{
-	char	*result;
-	int		i;
-	int		j;
-
-	if (!str)
-		return (NULL);
-	result = malloc(ft_strlen(str) * 2 + 1);
-	if (!result)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (str[i])
-	{
-		if (str[i] == '$' && str[i + 1] == '?')
-		{
-			result[j++] = '0';
-			i += 2;
-		}
-		else
-		{
-			result[j++] = str[i++];
-		}
-	}
-	result[j] = '\0';
-	return (result);
 }
