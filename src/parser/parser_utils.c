@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:06:17 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/06 16:13:14 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 18:29:55 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,45 +37,62 @@ void	add_arg(t_list **args_list, char *value)
 
 char	**list_to_array(t_list *lst)
 {
-	int		count;
-	int		i;
+	int		size;
 	char	**array;
+	int		i;
 
-	i = 0;
-	count = ft_lstsize(lst);
-	array = malloc(sizeof(char *) * (count + 1));
+	size = ft_lstsize(lst);
+	array = malloc(sizeof(char *) * (size + 1));
 	if (!array)
 		return (NULL);
+	i = 0;
 	while (lst)
 	{
-		array[i++] = ft_strdup((char *)lst->content);
+		array[i] = ft_strdup((char *)lst->content);
+		if (!array[i])
+			return (NULL);
 		lst = lst->next;
+		i++;
 	}
 	array[i] = NULL;
 	return (array);
 }
 
-void	free_array(char **array)
+void	process_arg_token(t_token *tok, t_list **args_list)
 {
-	int	i;
+	char	*expanded;
 
-	if (!array)
-		return ;
-	i = 0;
-	while (array[i])
-		free(array[i++]);
-	free(array);
+	if (tok->quote_type != SINGLE_QUOTE)
+	{
+		expanded = expand_env_vars(tok->value);
+		if (expanded)
+		{
+			add_arg(args_list, expanded);
+			free(expanded);
+		}
+		else
+			add_arg(args_list, tok->value);
+	}
+	else
+		add_arg(args_list, tok->value);
 }
 
 void	free_cmd_lst(t_cmd *cmd)
 {
 	t_cmd	*next;
+	int		i;
 
 	while (cmd)
 	{
 		next = cmd->next;
 		free(cmd->cmd);
-		free_array(cmd->args);
+		if (cmd->args)
+		{
+			i = 0;
+			while (cmd->args[i])
+				free(cmd->args[i++]);
+			free(cmd->args);
+		}
 		if (cmd->infile)
 			free(cmd->infile);
 		if (cmd->outfile)

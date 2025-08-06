@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:49:45 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 18:19:21 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 18:29:55 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,9 @@ int		get_last_exit_status(void);
 // Parser
 t_cmd	*parse(t_list *tokens);
 char	**list_to_array(t_list *lst);
-void	free_array(char **array);
 void	free_cmd_lst(t_cmd *cmd);
 void	ft_init_cmd(t_cmd *cmd);
 void	add_arg(t_list **args_list, char *value);
+void	process_arg_token(t_token *tok, t_list **args_list);
 
 #endif

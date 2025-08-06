@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:48:15 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/06 15:02:48 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 18:29:55 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ static void	parse_args(t_list **tokens, t_cmd *cmd)
 {
 	t_token	*tok;
 	t_list	*args_list;
-	char	*expanded;
 
 	args_list = NULL;
 	if (!tokens || !*tokens || !(*tokens)->content)
@@ -60,32 +59,11 @@ static void	parse_args(t_list **tokens, t_cmd *cmd)
 		tok = (t_token *)(*tokens)->content;
 		if (tok->type != WORD)
 			break ;
-		
-		// Simple environment variable expansion for all arguments
-		// Only expand if not in single quotes
-		if (tok->quote_type != SINGLE_QUOTE)
-		{
-			expanded = expand_env_vars(tok->value);
-			if (expanded)
-			{
-				add_arg(&args_list, expanded);
-				free(expanded);
-			}
-			else
-			{
-				add_arg(&args_list, tok->value);
-			}
-		}
-		else
-		{
-			// Single quotes - no expansion
-			add_arg(&args_list, tok->value);
-		}
+		process_arg_token(tok, &args_list);
 		*tokens = (*tokens)->next;
 	}
 	cmd->args = list_to_array(args_list);
 	ft_lstclear(&args_list, free);
-	return ;
 }
 
 static int	handle_token(t_list **tokens, t_cmd *cmd)
