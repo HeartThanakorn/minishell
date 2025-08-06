@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:49:45 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 17:12:48 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 18:19:21 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,10 @@ int		ft_unset(char **args);
 // Command execution
 void	exec_cmds(t_cmd *cmd_list);
 int		exec_external_cmd(char **args);
+char	*resolve_cmd_path(char *cmd);
+char	*find_cmd_in_path(char *cmd);
+int		execute_child_process(char *cmd_path, char **args);
+int		fork_and_execute(char *cmd_path, char **args);
 
 // Signal handling
 void	setup_signals(void);

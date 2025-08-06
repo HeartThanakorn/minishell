@@ -17,7 +17,7 @@ LIBFT_DIR = libft
 
 # Source files
 BUILTIN_SRCS = $(BUILTIN_DIR)/builtins.c $(BUILTIN_DIR)/echo.c $(BUILTIN_DIR)/pwd.c $(BUILTIN_DIR)/cd.c $(BUILTIN_DIR)/env.c $(BUILTIN_DIR)/exit.c $(BUILTIN_DIR)/export.c $(BUILTIN_DIR)/unset.c $(BUILTIN_DIR)/env_utils.c
-MINISHELL_SRCS = $(MINISHELL_DIR)/minishell.c
+MINISHELL_SRCS = $(MINISHELL_DIR)/minishell.c $(MINISHELL_DIR)/minishell_utils.c $(MINISHELL_DIR)/minishell_exec.c
 PARSER_SRCS = $(PARSER_DIR)/parser.c $(PARSER_DIR)/parser_utils.c
 PIPES_SRCS = $(PIPES_DIR)/pipes.c $(PIPES_DIR)/pipes_utils.c $(PIPES_DIR)/pipes_redirection.c
 REDIRECT_SRCS = $(REDIRECT_DIR)/redirections.c $(REDIRECT_DIR)/redirections_utils.c
