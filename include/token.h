@@ -3,38 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   token.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kmaeda <kmaeda@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 14:06:32 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/04 18:27:11 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/01 14:16:30 by kmaeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKEN_H
 # define TOKEN_H
 
-# include "../libft/libft.h"
+# include "libft.h"
 
-// Forward declaration
-typedef struct s_shell t_shell;
+typedef enum e_tok
+{
+	WORD,
+	PIPE,
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_APPEND,
+	REDIR_HERE_DOC
+}	t_TokenType;
+
+typedef struct s_token
+{
+	t_TokenType	type;
+	char		*value;
+}	t_token;
 
 t_list	*tokenize(const char *input);
 void	free_tokens(t_list *token_list);
-char	**list_to_array(t_list *tokens, t_shell *shell);
-char	*expand_variables(char *str, t_shell *shell);
-
-// Helper functions from token_utils.c
-void	str_quote(t_list **tokens, char **temp);
-void	str_op(t_list **tokens, char **temp);
+char	**list_to_array(t_list *tokens);
 void	str_word(t_list **tokens, char **temp);
-void	add_token(t_list **tokens, char *s);
-int	token_size(char *s, char quote);
-
-// New tokenization functions from token.c
-int	is_operator(char *token);
-char	*build_complete_token(char **temp);
-char	*extract_operator(char **temp);
-char	*extract_word_part(char **temp);
-char	*extract_quoted_part(char **temp);
+void	str_op(t_list **tokens, char **temp);
+int		token_size(char *s, char quote);
+void	add_token(t_list **tokens, t_token *token);
 
 #endif

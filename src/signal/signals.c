@@ -6,12 +6,15 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:02:48 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/04 18:05:04 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 10:51:32 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <errno.h>
+
+// Global variable definition for signal handling
+int	g_signal = 0;
 
 void	handle_sigint(int sig)
 {

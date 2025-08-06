@@ -17,11 +17,12 @@ LIBFT_DIR = libft
 # Source files
 BUILTIN_SRCS = $(BUILTIN_DIR)/builtins.c
 MINISHELL_SRCS = $(MINISHELL_DIR)/minishell.c $(MINISHELL_DIR)/env_utils.c $(MINISHELL_DIR)/path_utils.c
+PARSER_SRCS = $(PARSER_DIR)/parser.c $(PARSER_DIR)/parser_utils.c
 REDIRECT_SRCS = $(REDIRECT_DIR)/redirections.c
 SIGNAL_SRCS = $(SIGNAL_DIR)/signals.c
 TOKEN_SRCS = $(TOKEN_DIR)/token.c $(TOKEN_DIR)/token_utils.c
 
-SRCS = $(BUILTIN_SRCS) $(MINISHELL_SRCS) $(REDIRECT_SRCS) $(SIGNAL_SRCS) $(TOKEN_SRCS)
+SRCS = $(BUILTIN_SRCS) $(MINISHELL_SRCS) $(PARSER_SRCS) $(REDIRECT_SRCS) $(SIGNAL_SRCS) $(TOKEN_SRCS)
 OBJS = $(SRCS:.c=.o)
 
 # Libraries

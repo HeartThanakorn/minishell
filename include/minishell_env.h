@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_env.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kmaeda <kmaeda@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:59:54 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/04 18:27:11 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/07/31 16:19:03 by kmaeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "../libft/libft.h"
+# include "libft.h"
 
 typedef struct s_env
 {
@@ -28,30 +28,30 @@ typedef struct s_shell
 {
 	t_list	*env_list;
 	char	**paths;
-	int		last_exit_status;
 }	t_shell;
 
-// Create a new env node from "KEY=VALUE" string
-t_env	*create_env_node(char *env_str);
+typedef struct s_cmd
+{
+	int				is_infile;
+	int				append;
+	int				here_doc;
+	char			*delim;
+	char			*cmd;
+	char			**args;
+	char			*infile;
+	char			*outfile;
+	struct s_cmd	*next;
+}	t_cmd;
 
-// Initialize linked list from envp
-t_env	*init_env_list(char **envp);
-
-// Get value of a key from env list
-char	*get_env_value(t_list *env_list, const char *key);
-
-// Parse PATH env variable into array of paths
-char	**parse_path(t_list *env_list);
-
-// Missing function declarations that are used in minishell.c
+t_list	*env_node(char *env_s);
 void	init_env(t_shell *shell, char **envp);
 char	**get_path(t_list *env_list);
-
-// Cleanup functions
-void	free_env_node(void *content);
-void	cleanup_shell(t_shell *shell);
-
-// External global signal variable
-extern int	g_signal;
+char	*get_path_s(t_list *env_list);
+t_cmd	*parse(t_list *tokens);
+char	**list_to_array(t_list *lst);
+void	free_array(char **array);
+void	free_cmd_lst(t_cmd *cmd);
+void	ft_init_cmd(t_cmd *cmd);
+void	add_arg(t_list **args_list, char *value);
 
 #endif
