@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:19:07 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/06 15:42:11 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 16:13:14 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	minishell_loop(void)
 		tokens = tokenize(input);
 		cmd_list = parse(tokens);
 		exec_cmds(cmd_list);
-		free(cmd_list);
+		free_cmd_lst(cmd_list);
 		free_tokens(tokens);
 		free(input);
 	}
