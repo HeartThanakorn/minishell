@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 16:20:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 16:27:41 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 17:00:46 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 int	ft_pwd(void)
 {
-	char	*cwd = getcwd(NULL, 0);
+	char	*cwd;
 
+	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
 		perror("getcwd");
