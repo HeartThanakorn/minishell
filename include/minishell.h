@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:49:45 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 12:27:42 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 14:21:07 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@ int	ft_unset(char **args);
 // Command execution
 void	exec_cmds(t_cmd *cmd_list, t_shell *shell);
 int		exec_external_cmd(char **args, char **paths);
+void	exec_pipeline(t_cmd *cmd_list, t_shell *shell);
+int		count_commands(t_cmd *cmd_list);
+void	exec_single_cmd(t_cmd *cmd, t_shell *shell, int input_fd, int output_fd);
 
 // Signal handling
 void	setup_signals(void);
@@ -58,11 +61,15 @@ int	redirect_append(char *filename);
 int	handle_heredoc(char *delimiter);
 int	create_pipe(int *pipefd);
 
+// Pipe functions
+void	exec_pipeline(t_cmd *cmd_list, t_shell *shell);
+int		count_commands(t_cmd *cmd_list);
+void	exec_single_cmd(t_cmd *cmd, t_shell *shell, int input_fd, int output_fd);
+
 // Environment variable access
 extern char	**environ;
 
 // Environment variable expansion
 char	*expand_env_vars(char *str);
-char	*get_env_value(char *var_name);
 
 #endif

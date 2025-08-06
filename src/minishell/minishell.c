@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:19:07 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/06 11:30:40 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/06 14:21:07 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,75 +119,24 @@ int	exec_external_cmd(char **args, char **paths)
 void	exec_cmds(t_cmd *cmd_list, t_shell *shell)
 {
 	t_cmd	*current;
-	int		exit_status;
+	int		cmd_count;
 
-	current = cmd_list;
-	while (current)
+	if (!cmd_list)
+		return;
+
+	// Count commands to see if we have a pipeline
+	cmd_count = count_commands(cmd_list);
+	
+	if (cmd_count > 1)
 	{
-		if (!current->cmd)
-		{
-			current = current->next;
-			continue;
-		}
-		
-		// Handle input redirection
-		if (current->is_infile)
-		{
-			if (current->here_doc)
-			{
-				if (handle_heredoc(current->delim) == -1)
-				{
-					current = current->next;
-					continue;
-				}
-			}
-			else if (current->infile)
-			{
-				if (redirect_input(current->infile) == -1)
-				{
-					current = current->next;
-					continue;
-				}
-			}
-		}
-		
-		// Handle output redirection
-		if (current->outfile)
-		{
-			if (current->append)
-			{
-				if (redirect_append(current->outfile) == -1)
-				{
-					current = current->next;
-					continue;
-				}
-			}
-			else
-			{
-				if (redirect_output(current->outfile) == -1)
-				{
-					current = current->next;
-					continue;
-				}
-			}
-		}
-		
-		// Execute command
-		if (is_builtin(current->cmd))
-		{
-			exit_status = execute_builtin(current->args);
-			(void)exit_status; // TODO: Handle exit status properly
-		}
-		else
-		{
-			exit_status = exec_external_cmd(current->args, shell->paths);
-			if (exit_status == -1)
-			{
-				ft_printf("minishell: %s: command not found\n", current->cmd);
-			}
-		}
-		
-		current = current->next;
+		// We have a pipeline, execute with pipes
+		exec_pipeline(cmd_list, shell);
+	}
+	else
+	{
+		// Single command, execute normally
+		current = cmd_list;
+		exec_single_cmd(current, shell, STDIN_FILENO, STDOUT_FILENO);
 	}
 }
 
