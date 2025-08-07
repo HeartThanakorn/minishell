@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 18:45:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 18:55:03 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/07 10:42:06 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static char	*get_var_value(char *var_name)
 	char	*value;
 
 	if (ft_strncmp(var_name, "?", 1) == 0)
-		return (ft_strdup("0"));
+		return (ft_itoa(get_last_exit_status()));
 	value = getenv(var_name);
 	if (value)
 		return (ft_strdup(value));
