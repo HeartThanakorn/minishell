@@ -6,14 +6,15 @@
 /*   By: kmaeda <kmaeda@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:19:07 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/06 17:29:30 by kmaeda           ###   ########.fr       */
+/*   Updated: 2025/08/07 10:34:26 by kmaeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_env.h"
+#include "env.h"
 #include "token.h"
-#include <stdio.h>
 #include <termios.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 char	*handle_input(void)
 {
@@ -34,10 +35,10 @@ void	process_line(char *input, t_shell *shell, char **envp)
 	cmd_list = parse(tokens);
 	if (cmd_list)
 	{
-		shell->cmd_count = ft_lstsize(cmd_list);
+		shell->cmd_count = cmd_list_size(cmd_list);
 		cmd_path(cmd_list, shell->paths);
 		if (shell->cmd_count <= 0)
-			error_exit(shell, "no commands to execute\n");
+			error_exit(shell, cmd_list, "no commands to execute\n");
 		if (shell->cmd_count == 1)
 			exec_cmd(cmd_list, shell, envp);
 		else if (shell->cmd_count > 1)
@@ -81,5 +82,7 @@ int	main(int argc, char **argv, char **envp)
 	set_last_exit_status(0);
 	setup_signals();
 	minishell_loop(&shell, envp);
+	free_array(shell.paths);
+	ft_lstclear(&shell.env_list, free_env);
 	return (0);
 }

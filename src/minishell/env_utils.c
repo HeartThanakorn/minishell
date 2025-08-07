@@ -6,13 +6,13 @@
 /*   By: kmaeda <kmaeda@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 10:53:03 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/01 10:54:08 by kmaeda           ###   ########.fr       */
+/*   Updated: 2025/08/07 10:26:36 by kmaeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_env.h"
+#include "env.h"
 
-t_list	*env_node(char *env_s)
+static t_list	*env_node(char *env_s)
 {
 	int		key_len;
 	char	*equal;

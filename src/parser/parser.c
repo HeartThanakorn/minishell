@@ -6,11 +6,11 @@
 /*   By: kmaeda <kmaeda@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:48:15 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/04 18:40:33 by kmaeda           ###   ########.fr       */
+/*   Updated: 2025/08/07 10:29:45 by kmaeda           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_env.h"
+#include "cmd.h"
 #include "token.h"
 
 static int	parse_redir(t_list **tokens, t_cmd *cmd)
