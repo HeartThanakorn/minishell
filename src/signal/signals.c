@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 18:02:48 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 17:33:40 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/07 10:56:53 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,6 @@ void	handle_sigint(int sig)
 	rl_redisplay();
 }
 
-void	handle_sigquit(int sig)
-{
-	(void)sig;
-}
-
 void	setup_signals(void)
 {
 	struct sigaction	sa_int;
@@ -41,7 +36,7 @@ void	setup_signals(void)
 	sa_int.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa_int, NULL);
 	sigemptyset(&sa_quit.sa_mask);
-	sa_quit.sa_handler = handle_sigquit;
+	sa_quit.sa_handler = SIG_IGN;  // Use SIG_IGN instead of custom handler
 	sa_quit.sa_flags = SA_RESTART;
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
