@@ -1,0 +1,75 @@
+# Save this as "readline.supp"
+
+# Suppress readline library memory that's still reachable
+{
+   readline-still-reachable-1
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   obj:*/libreadline.so*
+}
+
+{
+   readline-still-reachable-2
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:readline
+}
+
+{
+   readline-still-reachable-3
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:rl_*
+}
+
+{
+   readline-add-history
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:add_history
+}
+
+{
+   readline-clear-history
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:rl_clear_history
+}
+
+# Suppress ncurses/terminfo related to readline
+{
+   readline-terminfo-1
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:tgetent
+}
+
+{
+   readline-terminfo-2
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:tget*
+}
+
+{
+   readline-termcap
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   obj:*/libtinfo.so*
+}
+
+{
+   readline-ncurses
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   obj:*/libncurses.so*
+}

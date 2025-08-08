@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmaeda <kmaeda@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 10:53:03 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/01 10:54:08 by kmaeda           ###   ########.fr       */
+/*   Updated: 2025/08/07 12:31:45 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_env.h"
+#include "minishell.h"
 
 t_list	*env_node(char *env_s)
 {

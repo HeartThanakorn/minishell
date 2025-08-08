@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirections.c                                     :+:      :+:    :+:   */
+/*   redirections_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tthajan <tthajan@student.42berlin.de>      +#+  +:+       +#+        */
+/*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/31 17:57:08 by tthajan           #+#    #+#             */
-/*   Updated: 2025/07/31 18:02:34 by tthajan          ###   ########.fr       */
+/*   Created: 2025/08/06 17:45:00 by tthajan           #+#    #+#             */
+/*   Updated: 2025/08/07 18:38:59 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,49 +69,5 @@ int	redirect_append(char *filename)
 		return (-1);
 	}
 	close(fd);
-	return (0);
-}
-
-int	handle_heredoc(char *delimiter)
-{
-	char	*line;
-	int	pipefd[2];
-
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		return (-1);
-	}
-	printf("heredoc> ");
-	while ((line = get_next_line(STDIN_FILENO)) != NULL)
-	{
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0 &&
-			line[ft_strlen(delimiter)] == '\n')
-		{
-			free(line);
-			break;
-		}
-		write(pipefd[1], line, ft_strlen(line));
-		free(line);
-		printf("heredoc> ");
-	}
-	close(pipefd[1]);
-	if (dup2(pipefd[0], STDIN_FILENO) == -1)
-	{
-		perror("dup2");
-		close(pipefd[0]);
-		return (-1);
-	}
-	close(pipefd[0]);
-	return (0);
-}
-
-int	create_pipe(int *pipefd)
-{
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		return (-1);
-	}
 	return (0);
 }
