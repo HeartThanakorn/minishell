@@ -396,18 +396,6 @@ ls /root
 cat /etc/shadow
 ```
 
-### Malformed Commands
-```bash
-cat |
-| cat
-cat | | cat
-> file.txt
-< nonexistent.txt
-cat <<
-cat << EOF
-# (without closing EOF)
-```
-
 ---
 
 ## 10. Complex Command Testing
@@ -417,29 +405,6 @@ cat << EOF
 echo this is a very long command with many arguments and words to test the parsing capabilities
 ls -l -a -h -t -r --color=auto /usr/bin /bin /sbin | head -20 | tail -10
 ```
-
-### Mixed Features
-```bash
-export VAR="hello world"
-echo "$VAR" | cat > test.txt && cat test.txt
-echo 'test $VAR' | grep test
-ls -l | grep "^d" > directories.txt
-cat << EOF | grep hello > output.txt
-hello world
-test
-hello again
-EOF
-```
-
-### Edge Cases
-```bash
-cat | cat | ls
-echo "" | cat
-echo | cat | echo test
-true && echo success || echo failure
-false && echo success || echo failure
-```
-
 ---
 
 ## 11. History Testing (if implemented)
@@ -460,40 +425,4 @@ Use valgrind or similar tools:
 valgrind --leak-check=full ./minishell
 ```
 
-### Large Input Testing
-```bash
-# Test with very long input lines
-echo [paste a very long string here]
 
-# Test with many arguments
-echo a b c d e f g [continue with many arguments]
-```
-
----
-
-## Comparison Checklist
-
-For each test, verify:
-- [ ] Same output format
-- [ ] Same exit codes (`echo $?` after each command)
-- [ ] Same error messages (or acceptable variations)
-- [ ] Same behavior with signals
-- [ ] Same environment variable handling
-- [ ] Same file creation/modification
-- [ ] Same process termination behavior
-
-## Common Differences to Watch For
-
-1. **Error message format**: Your error messages don't need to be identical to bash, but should be clear and appropriate
-2. **Prompt format**: Your prompt can be different from bash
-3. **History implementation**: History behavior may vary slightly
-4. **Signal handling timing**: Exact timing of signal handling may vary slightly
-5. **Memory usage**: Your implementation may use memory differently than bash
-
-## Notes
-
-- Clean up test files between test runs: `rm -f *.txt testfile* output* append*`
-- Some tests may behave differently based on your system configuration
-- Focus on core functionality matching - minor cosmetic differences in output formatting are usually acceptable
-- Always test edge cases and error conditions
-- Document any intentional differences from bash behavior
