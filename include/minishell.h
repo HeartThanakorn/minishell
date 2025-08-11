@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:49:45 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/11 15:43:41 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 15:57:52 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,13 @@ int		ft_env(char **args, t_shell *shell);
 int		ft_cd(char **args, t_shell *shell);
 int		ft_export(char **args, t_shell *shell);
 int		ft_unset(char **args, t_shell *shell);
+
+// CD utility functions
+void	set_env_value(t_list *env_list, char *key, char *value);
+char	*handle_cd_home(void);
+char	*handle_cd_prev(void);
+char	*get_cd_path(char **args);
+void	update_pwd_vars(char *old_pwd, char *new_logical_path, t_shell *shell);
 
 // Signal handling
 void	setup_signals(void);

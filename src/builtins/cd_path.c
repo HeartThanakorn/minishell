@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   cd_path.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/06 16:20:00 by tthajan           #+#    #+#             */
+/*   Created: 2025/08/11 15:55:00 by tthajan           #+#    #+#             */
 /*   Updated: 2025/08/11 15:57:52 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*get_parent_dir(char *current_path)
+char	*get_parent_dir(char *current_path)
 {
 	char	*last_slash;
 	char	*parent_path;
@@ -27,7 +27,7 @@ static char	*get_parent_dir(char *current_path)
 		return (ft_strdup("/"));
 }
 
-static char	*get_logical_path(char *path, t_shell *shell)
+char	*get_logical_path(char *path, t_shell *shell)
 {
 	t_env	*pwd_env;
 
@@ -45,29 +45,17 @@ static char	*get_logical_path(char *path, t_shell *shell)
 		return (getcwd(NULL, 0));
 }
 
-int	ft_cd(char **args, t_shell *shell)
+void	update_pwd_vars(char *old_pwd, char *new_logical_path, t_shell *shell)
 {
-	char	*path;
-	char	*pwd;
-	char	*new_logical_path;
+	char	*new_pwd;
 
-	pwd = getenv("PWD");
-	if (pwd)
-		pwd = ft_strdup(pwd);
-	path = get_cd_path(args);
-	if (!path)
+	if (old_pwd)
 	{
-		free(pwd);
-		return (1);
+		set_env_value(shell->env_list, "OLDPWD", old_pwd);
+		free(old_pwd);
 	}
-	if (chdir(path) != 0)
-	{
-		perror("cd");
-		free(pwd);
-		return (1);
-	}
-	new_logical_path = get_logical_path(path, shell);
-	update_pwd_vars(pwd, new_logical_path, shell);
-	free(new_logical_path);
-	return (0);
+	new_pwd = getcwd(NULL, 0);
+	if (new_pwd)
+		free(new_pwd);
+	set_env_value(shell->env_list, "PWD", new_logical_path);
 }
