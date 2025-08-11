@@ -6,16 +6,16 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 18:45:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/08 17:01:21 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 12:35:11 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execute_command(t_cmd *cmd, char **envp)
+void	execute_command(t_cmd *cmd, t_shell *shell, char **envp)
 {
 	if (is_builtin(cmd->cmd))
-		exit(execute_builtin(cmd->args));
+		exit(execute_builtin(cmd->args, shell));
 	if (!cmd->path)
 	{
 		ft_putstr_fd(cmd->cmd, 2);

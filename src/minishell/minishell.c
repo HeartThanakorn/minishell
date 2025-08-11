@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:19:07 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/08 17:15:03 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 12:35:11 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	handle_single_builtin(t_cmd *cmd_list, t_shell *shell, char **envp)
 		exec_cmd(cmd_list, shell, envp);
 	else
 	{
-		exit_code = execute_builtin(cmd_list->args);
+		exit_code = execute_builtin(cmd_list->args, shell);
 		if (exit_code == -42)
 		{
 			shell->should_exit = 1;
@@ -57,7 +57,7 @@ void	process_line(char *input, t_shell *shell, char **envp)
 	tokens = tokenize(input);
 	if (!tokens)
 		return ;
-	cmd_list = parse(tokens);
+	cmd_list = parse(tokens, shell);
 	if (cmd_list)
 	{
 		shell->cmd_count = count_commands(cmd_list);
@@ -75,7 +75,7 @@ void	process_line(char *input, t_shell *shell, char **envp)
 				exec_cmd(cmd_list, shell, envp);
 		}
 		else if (shell->cmd_count > 1)
-			exec_pipe(cmd_list, shell->cmd_count, envp);
+			exec_pipe(cmd_list, shell->cmd_count, shell, envp);
 		free_cmd_lst(cmd_list);
 	}
 	free_tokens(tokens);

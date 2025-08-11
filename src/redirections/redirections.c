@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:57:08 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/08 15:45:59 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 12:35:11 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	setup_heredoc_pipe(int *pipefd)
 	return (0);
 }
 
-static void	process_heredoc_input(char *delimiter, int write_fd)
+static void	process_heredoc_input(char *delimiter, int write_fd, t_shell *shell)
 {
 	char	*line;
 	char	*expanded_line;
@@ -39,7 +39,7 @@ static void	process_heredoc_input(char *delimiter, int write_fd)
 			free(line);
 			break ;
 		}
-		expanded_line = expand_env_vars(line);
+		expanded_line = expand_env_vars(line, shell->env_list);
 		if (expanded_line)
 		{
 			write(write_fd, expanded_line, ft_strlen(expanded_line));
@@ -53,13 +53,13 @@ static void	process_heredoc_input(char *delimiter, int write_fd)
 	}
 }
 
-int	handle_heredoc(char *delimiter)
+int	handle_heredoc(char *delimiter, t_shell *shell)
 {
 	int	pipefd[2];
 
 	if (setup_heredoc_pipe(pipefd) == -1)
 		return (-1);
-	process_heredoc_input(delimiter, pipefd[1]);
+	process_heredoc_input(delimiter, pipefd[1], shell);
 	close(pipefd[1]);
 	return (pipefd[0]);
 }

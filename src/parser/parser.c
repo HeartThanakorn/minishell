@@ -6,14 +6,14 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 12:48:15 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/07 18:35:25 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 12:35:11 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "token.h"
 
-static t_cmd	*create_cmd(t_list **tokens)
+static t_cmd	*create_cmd(t_list **tokens, t_shell *shell)
 {
 	t_cmd	*cmd;
 
@@ -23,7 +23,7 @@ static t_cmd	*create_cmd(t_list **tokens)
 	if (!cmd)
 		return (NULL);
 	ft_init_cmd(cmd);
-	if (process_cmd_tokens(tokens, cmd) == 1)
+	if (process_cmd_tokens(tokens, cmd, shell) == 1)
 		return (free(cmd), NULL);
 	if (!cmd->cmd && !cmd->infile && !cmd->outfile && !cmd->here_doc)
 	{
@@ -33,7 +33,7 @@ static t_cmd	*create_cmd(t_list **tokens)
 	return (cmd);
 }
 
-t_cmd	*parse(t_list *tokens)
+t_cmd	*parse(t_list *tokens, t_shell *shell)
 {
 	t_cmd	*cmd_head;
 	t_cmd	*cmd;
@@ -49,7 +49,7 @@ t_cmd	*parse(t_list *tokens)
 			tokens = tokens->next;
 		else
 		{
-			new_cmd = create_cmd(&tokens);
+			new_cmd = create_cmd(&tokens, shell);
 			if (!new_cmd)
 				return (free_cmd_lst(cmd_head), NULL);
 			if (!cmd_head)

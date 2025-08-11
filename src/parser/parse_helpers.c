@@ -6,14 +6,14 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 18:30:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/07 18:35:25 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 12:35:11 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "token.h"
 
-int	parse_redir(t_list **tokens, t_cmd *cmd)
+int	parse_redir(t_list **tokens, t_cmd *cmd, t_shell *shell)
 {
 	t_token	*tok;
 	char	*expanded_filename;
@@ -28,7 +28,7 @@ int	parse_redir(t_list **tokens, t_cmd *cmd)
 	tok = (t_token *)(*tokens)->content;
 	if (tok->type != WORD)
 		return (1);
-	expanded_filename = expand_env_vars_quoted(tok->value, tok->quote_type);
+	expanded_filename = expand_env_vars_quoted(tok->value, tok->quote_type, shell->env_list);
 	if (!expanded_filename)
 		expanded_filename = ft_strdup(tok->value);
 	assign_redir_file(cmd, redir_type, expanded_filename);
@@ -36,7 +36,7 @@ int	parse_redir(t_list **tokens, t_cmd *cmd)
 	return (0);
 }
 
-void	parse_args(t_list **tokens, t_cmd *cmd)
+void	parse_args(t_list **tokens, t_cmd *cmd, t_shell *shell)
 {
 	t_token	*tok;
 	t_list	*args_list;
@@ -48,18 +48,18 @@ void	parse_args(t_list **tokens, t_cmd *cmd)
 	tok = (t_token *)(*tokens)->content;
 	if (!tok->value)
 		return ;
-	expanded_cmd = expand_env_vars_quoted(tok->value, tok->quote_type);
+	expanded_cmd = expand_env_vars_quoted(tok->value, tok->quote_type, shell->env_list);
 	if (!expanded_cmd)
 		expanded_cmd = ft_strdup(tok->value);
 	cmd->cmd = expanded_cmd;
-	add_arg(&args_list, cmd->cmd, 0);
+	add_arg(&args_list, cmd->cmd, 0, shell);
 	*tokens = (*tokens)->next;
-	process_word_tokens(tokens, &args_list);
+	process_word_tokens(tokens, &args_list, shell);
 	cmd->args = list_to_array(args_list);
 	ft_lstclear(&args_list, free);
 }
 
-void	process_word_tokens(t_list **tokens, t_list **args_list)
+void	process_word_tokens(t_list **tokens, t_list **args_list, t_shell *shell)
 {
 	t_token	*tok;
 
@@ -68,12 +68,12 @@ void	process_word_tokens(t_list **tokens, t_list **args_list)
 		tok = (t_token *)(*tokens)->content;
 		if (tok->type != WORD)
 			break ;
-		add_arg(args_list, tok->value, tok->quote_type);
+		add_arg(args_list, tok->value, tok->quote_type, shell);
 		*tokens = (*tokens)->next;
 	}
 }
 
-int	handle_token(t_list **tokens, t_cmd *cmd)
+int	handle_token(t_list **tokens, t_cmd *cmd, t_shell *shell)
 {
 	t_token	*tok;
 
@@ -81,12 +81,12 @@ int	handle_token(t_list **tokens, t_cmd *cmd)
 	if (tok->type == REDIR_IN || tok->type == REDIR_OUT
 		|| tok->type == REDIR_APPEND || tok->type == REDIR_HERE_DOC)
 	{
-		if (parse_redir(tokens, cmd))
+		if (parse_redir(tokens, cmd, shell))
 			return (1);
 	}
 	else if (tok->type == WORD)
 	{
-		parse_args(tokens, cmd);
+		parse_args(tokens, cmd, shell);
 	}
 	else if (tok->type == PIPE)
 	{
@@ -98,13 +98,13 @@ int	handle_token(t_list **tokens, t_cmd *cmd)
 	return (0);
 }
 
-int	process_cmd_tokens(t_list **tokens, t_cmd *cmd)
+int	process_cmd_tokens(t_list **tokens, t_cmd *cmd, t_shell *shell)
 {
 	int	status;
 
 	while (*tokens)
 	{
-		status = handle_token(tokens, cmd);
+		status = handle_token(tokens, cmd, shell);
 		if (status == 1)
 			return (1);
 		else if (status == 2)

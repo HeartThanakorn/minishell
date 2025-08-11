@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 17:06:17 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/08 16:04:11 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 12:35:11 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ void	ft_init_cmd(t_cmd *cmd)
 	cmd->out_fd = -1;
 }
 
-void	add_arg(t_list **args_list, char *value, char quote_type)
+void	add_arg(t_list **args_list, char *value, char quote_type, t_shell *shell)
 {
 	t_list	*new_node;
 	char	*expanded_value;
 
-	expanded_value = expand_env_vars_quoted(value, quote_type);
+	expanded_value = expand_env_vars_quoted(value, quote_type, shell ? shell->env_list : NULL);
 	if (!expanded_value)
 		expanded_value = ft_strdup(value);
 	new_node = ft_lstnew(expanded_value);

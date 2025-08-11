@@ -6,11 +6,16 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:32:15 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/07 18:07:34 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 12:35:11 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	strcmp_exact(const char *s1, const char *s2)
+{
+	return (ft_strncmp(s1, s2, ft_strlen(s2)) == 0 && s1[ft_strlen(s2)] == '\0');
+}
 #include <sys/stat.h>
 #include <errno.h>
 
@@ -36,34 +41,31 @@ int	is_builtin(char *cmd)
 {
 	if (!cmd)
 		return (0);
-	if ((ft_strncmp(cmd, "pwd", 3) == 0 && cmd[3] == '\0')
-		|| (ft_strncmp(cmd, "echo", 4) == 0 && cmd[4] == '\0')
-		|| (ft_strncmp(cmd, "exit", 4) == 0 && cmd[4] == '\0')
-		|| (ft_strncmp(cmd, "env", 3) == 0 && cmd[3] == '\0')
-		|| (ft_strncmp(cmd, "cd", 2) == 0 && cmd[2] == '\0')
-		|| (ft_strncmp(cmd, "export", 6) == 0 && cmd[6] == '\0')
-		|| (ft_strncmp(cmd, "unset", 5) == 0 && cmd[5] == '\0'))
+	if (strcmp_exact(cmd, "pwd") || strcmp_exact(cmd, "echo") 
+		|| strcmp_exact(cmd, "exit") || strcmp_exact(cmd, "env")
+		|| strcmp_exact(cmd, "cd") || strcmp_exact(cmd, "export")
+		|| strcmp_exact(cmd, "unset"))
 		return (1);
 	return (0);
 }
 
-int	execute_builtin(char **args)
+int	execute_builtin(char **args, t_shell *shell)
 {
 	if (!args || !args[0])
 		return (-1);
-	if (ft_strncmp(args[0], "pwd", 3) == 0 && args[0][3] == '\0')
+	if (strcmp_exact(args[0], "pwd"))
 		return (ft_pwd());
-	if (ft_strncmp(args[0], "echo", 4) == 0 && args[0][4] == '\0')
+	if (strcmp_exact(args[0], "echo"))
 		return (ft_echo(args));
-	if (ft_strncmp(args[0], "exit", 4) == 0 && args[0][4] == '\0')
+	if (strcmp_exact(args[0], "exit"))
 		return (ft_exit(args));
-	if (ft_strncmp(args[0], "env", 3) == 0 && args[0][3] == '\0')
-		return (ft_env(args));
-	if (ft_strncmp(args[0], "cd", 2) == 0 && args[0][2] == '\0')
-		return (ft_cd(args));
-	if (ft_strncmp(args[0], "export", 6) == 0 && args[0][6] == '\0')
-		return (ft_export(args));
-	if (ft_strncmp(args[0], "unset", 5) == 0 && args[0][5] == '\0')
-		return (ft_unset(args));
+	if (strcmp_exact(args[0], "env"))
+		return (ft_env(args, shell));
+	if (strcmp_exact(args[0], "cd"))
+		return (ft_cd(args, shell));
+	if (strcmp_exact(args[0], "export"))
+		return (ft_export(args, shell));
+	if (strcmp_exact(args[0], "unset"))
+		return (ft_unset(args, shell));
 	return (-1);
 }

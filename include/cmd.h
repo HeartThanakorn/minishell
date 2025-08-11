@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 10:20:44 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/07 17:58:05 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 12:35:11 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,15 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }	t_cmd;
 
-t_cmd	*parse(t_list *tokens);
+t_cmd	*parse(t_list *tokens, t_shell *shell);
 char	**list_to_array(t_list *lst);
 void	free_array(char **array);
 void	free_cmd_lst(t_cmd *cmd);
 void	ft_init_cmd(t_cmd *cmd);
-void	add_arg(t_list **args_list, char *value, char quote_type);
-int		init_files(t_cmd *cmd);
+void	add_arg(t_list **args_list, char *value, char quote_type, t_shell *shell);
+int		init_files(t_cmd *cmd, t_shell *shell);
 void	exec_cmd(t_cmd *cmd, t_shell *shell, char **envp);
-void	exec_pipe(t_cmd *cmd_list, int cmd_count, char **envp);
+void	exec_pipe(t_cmd *cmd_list, int cmd_count, t_shell *shell, char **envp);
 int		count_commands(t_cmd *cmd_list);
 
 #endif
