@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 16:20:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/06 17:00:46 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 10:09:05 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_env(char **args)
 
 	if (args[1])
 	{
-		fprintf(stderr, "env: too many arguments\n");
+		ft_putendl_fd("env: too many arguments", 2);
 		return (1);
 	}
 	i = 0;

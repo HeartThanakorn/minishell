@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 16:20:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/08 10:43:10 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 10:09:47 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,14 @@ int	ft_exit(char **args)
 		exit_status = (int)strtol(args[1], &endptr, 10);
 		if (*endptr != '\0' || args[1][0] == '\0')
 		{
-			fprintf(stderr, "exit: %s: numeric argument required\n", args[1]);
+			ft_putstr_fd("exit: ", 2);
+			ft_putstr_fd(args[1], 2);
+			ft_putendl_fd(": numeric argument required", 2);
 			exit_status = 2;
 		}
 		else if (args[2])
 		{
-			fprintf(stderr, "exit: too many arguments\n");
+			ft_putstr_fd("exit: too many arguments\n", 2);
 			return (1);
 		}
 	}

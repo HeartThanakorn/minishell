@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 16:20:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/07 18:07:34 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 10:08:33 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ static int	unset_variable(char *var_name)
 {
 	if (!is_valid_identifier(var_name))
 	{
-		fprintf(stderr, "unset: `%s': not a valid identifier\n", var_name);
+		ft_putstr_fd("unset: `", 2);
+		ft_putstr_fd(var_name, 2);
+		ft_putendl_fd("': not a valid identifier", 2);
 		return (1);
 	}
 	if (unsetenv(var_name) != 0)

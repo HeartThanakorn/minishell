@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 16:20:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/07 18:13:27 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 10:07:37 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ static int	export_without_value(char *arg)
 {
 	if (!is_valid_identifier(arg))
 	{
-		fprintf(stderr, "export: `%s': not a valid identifier\n", arg);
+		ft_putstr_fd("export: `", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putendl_fd("': not a valid identifier", 2);
 		return (1);
 	}
 	if (setenv(arg, "", 1) != 0)
@@ -39,7 +41,9 @@ static int	export_with_value(char *arg)
 	var_value = equal_sign + 1;
 	if (!is_valid_identifier(var_name))
 	{
-		fprintf(stderr, "export: `%s': not a valid identifier\n", var_name);
+		ft_putstr_fd("export: `", 2);
+		ft_putstr_fd(var_name, 2);
+		ft_putendl_fd("': not a valid identifier", 2);
 		*equal_sign = '=';
 		return (1);
 	}

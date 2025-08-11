@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 16:20:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/08 17:28:53 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 10:11:10 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static char	*handle_cd_home(void)
 	home = getenv("HOME");
 	if (!home)
 	{
-		fprintf(stderr, "cd: HOME not set\n");
+		ft_putendl_fd("cd: HOME not set", 2);
 		return (NULL);
 	}
 	return (home);
@@ -33,7 +33,7 @@ static char	*handle_cd_prev(void)
 	oldpwd = getenv("OLDPWD");
 	if (!oldpwd)
 	{
-		fprintf(stderr, "cd: OLDPWD not set\n");
+		ft_putendl_fd("cd: OLDPWD not set", 2);
 		return (NULL);
 	}
 	printf("%s\n", oldpwd);
