@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:32:15 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/11 12:35:11 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 14:31:54 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	execute_builtin(char **args, t_shell *shell)
 	if (!args || !args[0])
 		return (-1);
 	if (strcmp_exact(args[0], "pwd"))
-		return (ft_pwd());
+		return (ft_pwd(shell));
 	if (strcmp_exact(args[0], "echo"))
 		return (ft_echo(args));
 	if (strcmp_exact(args[0], "exit"))

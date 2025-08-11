@@ -6,16 +6,24 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 10:53:40 by kmaeda            #+#    #+#             */
-/*   Updated: 2025/08/08 17:15:03 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 14:33:30 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_path_s(t_list *env_list)
+static char	*get_path_s(t_list *env_list)
 {
-	(void)env_list;
-	return (getenv("PATH"));
+	t_env	*env;
+
+	while (env_list)
+	{
+		env = (t_env *)env_list->content;
+		if (ft_strncmp(env->key, "PATH", 4) == 0)
+			return (env->value);
+		env_list = env_list->next;
+	}
+	return (NULL);
 }
 
 char	**get_path(t_list *env_list)

@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 16:20:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/11 12:35:11 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 14:31:56 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,20 @@ int	ft_cd(char **args, t_shell *shell)
 	}
 	if (path[0] == '/')
 		new_logical_path = ft_strdup(path);
+	else if (ft_strncmp(path, "..", 2) == 0 && path[2] == '\0')
+	{
+		t_env *pwd_env = find_env_var(shell->env_list, "PWD");
+		if (pwd_env && pwd_env->value)
+		{
+			char *last_slash = ft_strrchr(pwd_env->value, '/');
+			if (last_slash && last_slash != pwd_env->value)
+				new_logical_path = ft_substr(pwd_env->value, 0, last_slash - pwd_env->value);
+			else
+				new_logical_path = ft_strdup("/");
+		}
+		else
+			new_logical_path = getcwd(NULL, 0);
+	}
 	else
 		new_logical_path = getcwd(NULL, 0);
 	update_pwd_vars(pwd, new_logical_path, shell);

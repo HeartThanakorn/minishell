@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:49:45 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/11 12:35:11 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 14:31:53 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int		execute_builtin(char **args, t_shell *shell);
 int		is_valid_identifier(char *str);
 void	print_invalid_identifier_error(char *command, char *identifier);
 t_env	*find_env_var(t_list *env_list, char *key);
-int		ft_pwd(void);
+int		ft_pwd(t_shell *shell);
 int		ft_echo(char **args);
 int		ft_exit(char **args);
 int		ft_env(char **args, t_shell *shell);
