@@ -6,11 +6,12 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 19:00:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/11 13:15:37 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 15:06:59 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <errno.h>
 
 int	init_input_files(t_cmd *cmd, t_shell *shell)
 {
@@ -25,9 +26,7 @@ int	init_input_files(t_cmd *cmd, t_shell *shell)
 		cmd->in_fd = open(cmd->infile, O_RDONLY);
 		if (cmd->in_fd < 0)
 		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(cmd->infile, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			print_file_error(cmd->infile);
 			return (1);
 		}
 	}
@@ -48,9 +47,7 @@ int	init_output_files(t_cmd *cmd)
 		{
 			if (cmd->in_fd != -1)
 				close(cmd->in_fd);
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(cmd->outfile, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			print_file_error(cmd->outfile);
 			return (1);
 		}
 	}
@@ -69,15 +66,13 @@ void	exec_child_command(t_cmd *cmd, t_shell *shell, char **envp)
 		exit(exit_code);
 	}
 	if (!cmd->path)
-	{
-		ft_putstr_fd(cmd->cmd, 2);
-		ft_putstr_fd(": command not found\n", 2);
-		exit(127);
-	}
+		handle_exec_error(cmd->cmd);
 	if (execve(cmd->path, cmd->args, envp) == -1)
 	{
-		ft_putstr_fd(cmd->cmd, 2);
-		ft_putstr_fd(": command not found\n", 2);
+		if (errno == ENOENT && (cmd->cmd[0] == '/' || ft_strncmp(cmd->cmd, "./", 2) == 0))
+			print_command_error(cmd->cmd, 1);
+		else
+			print_command_error(cmd->cmd, 0);
 		exit(127);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 12:00:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/11 12:35:11 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 15:06:59 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,30 @@ t_env	*find_env_var(t_list *env_list, char *key)
 		current = current->next;
 	}
 	return (NULL);
+}
+
+void	print_command_error(char *cmd, int error_type)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(cmd, 2);
+	if (error_type == 1)
+		ft_putstr_fd(": No such file or directory\n", 2);
+	else
+		ft_putstr_fd(": command not found\n", 2);
+}
+
+void	handle_exec_error(char *cmd)
+{
+	if (ft_strchr(cmd, '/'))
+		print_command_error(cmd, 1);
+	else
+		print_command_error(cmd, 0);
+	exit(127);
+}
+
+void	print_file_error(char *filename)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(filename, 2);
+	ft_putstr_fd(": No such file or directory\n", 2);
 }

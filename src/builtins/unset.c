@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 16:20:00 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/11 12:35:11 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 15:05:57 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ static int	unset_variable(char *var_name, t_shell *shell)
 		print_invalid_identifier_error("unset", var_name);
 		return (1);
 	}
-	
 	current = shell->env_list;
 	prev = NULL;
 	while (current)
