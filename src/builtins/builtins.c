@@ -6,18 +6,19 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:32:15 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/11 14:31:54 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 15:31:18 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <sys/stat.h>
+#include <errno.h>
 
 static int	strcmp_exact(const char *s1, const char *s2)
 {
-	return (ft_strncmp(s1, s2, ft_strlen(s2)) == 0 && s1[ft_strlen(s2)] == '\0');
+	return (ft_strncmp(s1, s2, ft_strlen(s2)) == 0 && 
+		s1[ft_strlen(s2)] == '\0');
 }
-#include <sys/stat.h>
-#include <errno.h>
 
 int	is_valid_identifier(char *str)
 {
