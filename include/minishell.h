@@ -6,7 +6,7 @@
 /*   By: tthajan <tthajan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 17:49:45 by tthajan           #+#    #+#             */
-/*   Updated: 2025/08/11 15:06:59 by tthajan          ###   ########.fr       */
+/*   Updated: 2025/08/11 15:29:11 by tthajan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,12 @@ void	exec_child_command(t_cmd *cmd, t_shell *shell, char **envp);
 // Parser helper functions
 void	set_redir_flags(t_cmd *cmd, int redir_type);
 void	assign_redir_file(t_cmd *cmd, int redir_type, char *filename);
-void	process_word_tokens(t_list **tokens, t_list **args_list, t_shell *shell);
+void	process_word_tokens(t_list **tokens, t_list **args_list,
+			t_shell *shell);
 int		handle_token(t_list **tokens, t_cmd *cmd, t_shell *shell);
 int		process_cmd_tokens(t_list **tokens, t_cmd *cmd, t_shell *shell);
 int		parse_redir(t_list **tokens, t_cmd *cmd, t_shell *shell);
 void	parse_args(t_list **tokens, t_cmd *cmd, t_shell *shell);
 int		count_commands(t_cmd *cmd_list);
-
 
 #endif
